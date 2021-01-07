@@ -4,13 +4,9 @@ package com.demo.upload;
 
 option java_multiple_files = true;
 
-message Metadata {
+message FileMetadata {
   string fileName = 1;
   string fileType = 2;
-}
-
-message File {
-  bytes content = 1;
 }
 
 enum UploadStatus {
@@ -21,14 +17,14 @@ enum UploadStatus {
 }
 
 message UploadFileRequest {
-  oneof request {
-    Metadata metadata = 1;
-    File file = 2;
+  oneof data {
+    FileMetadata fileMetadata = 1;
+    bytes fileChunkData = 2;
   }
 }
 
 message UploadFileResponse {
-  string name = 1;
+  string fileUrl = 1;
   UploadStatus status = 2;
 }
 
