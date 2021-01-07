@@ -16,6 +16,7 @@ class UploadFileEndpointUnary(private val s3Service: S3Service) :
         val content = request.content
         val bytes = content.toByteArray()
 
+        // TODO: tratar erro
         val completeFileName = s3Service.storeFile(request.fileName, request.fileType, bytes)
 
         return UploadFileUnaryResponse.newBuilder()
