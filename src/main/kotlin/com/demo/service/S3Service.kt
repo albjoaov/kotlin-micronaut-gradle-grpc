@@ -7,6 +7,9 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
+import io.micronaut.context.annotation.Value
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.ByteArrayInputStream
 import java.util.UUID
 import javax.annotation.PostConstruct
@@ -15,12 +18,19 @@ import javax.inject.Singleton
 @Singleton
 class S3Service() {
 
+    private val LOGGER: Logger = LoggerFactory.getLogger(S3Service::class.java)
+
     private lateinit var s3Client: AmazonS3
+
+    @Value("\${aws.s3.location}")
+    private lateinit var awsEndpoint: String
+
+    @Value("\${aws.s3.region}")
+    private lateinit var region: String
 
     @PostConstruct
     fun init() {
-        // Ler por variável de ambiente
-        val endpointConfiguration = AwsClientBuilder.EndpointConfiguration("http://localhost:4566", "us-east-1")
+        val endpointConfiguration = AwsClientBuilder.EndpointConfiguration(awsEndpoint, region)
         this.s3Client = AmazonS3ClientBuilder.standard()
             .withEndpointConfiguration(endpointConfiguration)
             .withPathStyleAccessEnabled(true)
@@ -38,16 +48,13 @@ class S3Service() {
         val putObjectRequest = PutObjectRequest("mybucket", completeFileName, byteArrayInputStream, objectMetadata)
 
         try {
-            val result = this.s3Client.putObject(putObjectRequest)
+            this.s3Client.putObject(putObjectRequest)
         } catch (e: AmazonServiceException) {
-            // criar log
-            e.printStackTrace();
+            LOGGER.error("O S3 não conseguiu processar corretamente a requisição", e)
         } catch (e: SdkClientException) {
-            // criar log
-            e.printStackTrace();
+            LOGGER.error("Não foi possível se comunicar com a AWS", e)
         }
 
-        // retornar url de acesso do arquivo
         return completeFileName;
     }
 }
