@@ -41,7 +41,7 @@ class S3Service() {
     }
 
     fun storeFile(fileName: String, fileType: String, bytes: ByteArray): String {
-        val completeFileName = "${fileName}-${UUID.randomUUID()}.${fileType}" // talvez colocar timestamp ou data eh melhor
+        val completeFileName = "${fileName}-${UUID.randomUUID()}.${fileType}"
 
         val objectMetadata = ObjectMetadata()
         objectMetadata.contentLength = bytes.size.toLong()
