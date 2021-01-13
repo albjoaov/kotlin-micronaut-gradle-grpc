@@ -52,9 +52,9 @@ class S3Service() {
         try {
             this.s3Client.putObject(putObjectRequest)
         } catch (e: AmazonServiceException) {
-            LOGGER.error("O S3 não conseguiu processar corretamente a requisição", e)
+            LOGGER.error("A AWS recebeu a requisição, porém o S3 não conseguiu processá-la corretamente", e)
         } catch (e: SdkClientException) {
-            LOGGER.error("Não foi possível se comunicar com a AWS", e)
+            LOGGER.error("Não foi possível se comunicar com o Amazon S3 ou o Client não pôde parsear a resposta", e)
         }
 
         return completeFileName;
