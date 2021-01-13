@@ -28,6 +28,9 @@ class S3Service() {
     @Value("\${aws.s3.region}")
     private lateinit var region: String
 
+    @Value("\${aws.s3.bucket}")
+    private lateinit var bucket: String
+
     @PostConstruct
     fun init() {
         val endpointConfiguration = AwsClientBuilder.EndpointConfiguration(awsEndpoint, region)
@@ -44,8 +47,7 @@ class S3Service() {
         objectMetadata.contentLength = bytes.size.toLong()
 
         val byteArrayInputStream = ByteArrayInputStream(bytes)
-        // setar por variavel de ambiente
-        val putObjectRequest = PutObjectRequest("mybucket", completeFileName, byteArrayInputStream, objectMetadata)
+        val putObjectRequest = PutObjectRequest(bucket, completeFileName, byteArrayInputStream, objectMetadata)
 
         try {
             this.s3Client.putObject(putObjectRequest)

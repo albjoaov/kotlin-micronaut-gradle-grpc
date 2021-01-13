@@ -6,3 +6,4 @@ aws:
   s3:
     location: http://localhost:4566
     region: us-east-1
+    bucket: mybucket
